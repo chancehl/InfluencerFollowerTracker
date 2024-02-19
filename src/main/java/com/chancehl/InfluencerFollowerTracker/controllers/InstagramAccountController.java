@@ -22,6 +22,7 @@ public class InstagramAccountController {
      * @return The saved Instagram account
      * @throws IOException When communication cannot be established with the "private" Instagram API
      * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
+     * @throws AccessDeniedException When the client API key does not match what's stored on the server
      */
     @PostMapping("/account/{name}")
     public InstagramAccount saveInstagramAccount(@RequestHeader("X-Api-Key") String apiKey, @PathVariable String name) throws IOException, InterruptedException, AccessDeniedException {
