@@ -19,8 +19,11 @@ public class InstagramAccountController {
     public InstagramAccount getInstagramAccount(@PathVariable String name) throws IOException, InterruptedException {
         InstagramPrivateApiUserResponse response = this.instagramAccountService.getFollowerCount(name);
 
-        return InstagramAccount.builder()
+        InstagramAccount account = InstagramAccount.builder()
+                .name(name)
                 .followers(response.data.user.edgeFollowedBy.count)
                 .build();
+
+        return this.instagramAccountService.saveAccount(account);
     }
 }
