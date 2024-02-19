@@ -30,6 +30,14 @@ public class InstagramAccountService {
     // mobile clients. Those APIs require a mobile User-Agent header.
     private static final String HACKY_ASS_USER_AGENT_FROM_INTERNET = "Instagram 76.0.0.15.395 Android (24/7.0; 640dpi; 1440x2560; samsung; SM-G930F; herolte; samsungexynos8890; en_US; 138226743)";
 
+    /**
+     * Gets the follower count for a given Instagram account name
+     *
+     * @param name The Instagram account name
+     * @return Instagram "private" API response object
+     * @throws IOException When communication cannot be established with the "private" Instagram API
+     * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
+     */
     public InstagramPrivateApiUserResponse getFollowerCount(String name) throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
@@ -44,6 +52,12 @@ public class InstagramAccountService {
         return this.objectMapper.readValue(response.body(), InstagramPrivateApiUserResponse.class);
     }
 
+    /**
+     * Saves an Instagram account in the database
+     *
+     * @param account The account to save
+     * @return The account that was saved
+     */
     public InstagramAccount saveAccount(InstagramAccount account) {
         return this.instagramAccountRepository.save(account);
     }
