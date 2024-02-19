@@ -20,7 +20,7 @@ public class InstagramAccountController {
         InstagramPrivateApiUserResponse response = this.instagramAccountService.getFollowerCount(name);
 
         return InstagramAccount.builder()
-                .followers(response.data.user.edge_followed_by.count)
+                .followers(response.data.user.edgeFollowedBy.count)
                 .build();
     }
 }
