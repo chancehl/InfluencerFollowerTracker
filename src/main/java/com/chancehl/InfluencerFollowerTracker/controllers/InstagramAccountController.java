@@ -110,12 +110,6 @@ public class InstagramAccountController {
      */
     @GetMapping("/accounts/{handle}/snapshots/latest")
     public FollowerSnapshot getLatestSnapshot(@PathVariable String handle) throws MissingEntityException {
-        Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
-
-        if (account.isEmpty()) {
-            throw new MissingEntityException("Invalid account: " + handle);
-        }
-
         return this.followerSnapshotService.getLatestSnapshot(handle);
     }
 }
