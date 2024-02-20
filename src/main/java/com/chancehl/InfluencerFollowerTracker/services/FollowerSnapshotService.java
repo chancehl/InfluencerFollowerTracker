@@ -13,11 +13,18 @@ public class FollowerSnapshotService {
     @Autowired
     private FollowerSnapshotRepository followerSnapshotRepository;
 
-    public FollowerSnapshot getLatestSnapshot(String handle) {
+    /**
+     * Gets the latest snapshot for an Instagram account
+     *
+     * @param handle The Instagram account handle
+     * @return The latest snapshot
+     * @throws MissingEntityException When account does not exist or when the account has no snapshots
+     */
+    public FollowerSnapshot getLatestSnapshot(String handle) throws MissingEntityException {
         List<FollowerSnapshot> sortedSnapshots = this.followerSnapshotRepository.findByInstagramAccountHandleOrderByCreatedOnDesc(handle);
 
         if (sortedSnapshots.isEmpty()) {
-            throw new MissingEntityException("No snapshots exist");
+            throw new MissingEntityException("Account/snapshots do not exist");
         }
 
         return sortedSnapshots.get(0);
