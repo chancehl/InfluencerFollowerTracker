@@ -39,7 +39,6 @@ public class InstagramAccountService {
      * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
      */
     public InstagramPrivateApiUserResponse getFollowerCount(String name) throws IOException, InterruptedException {
-
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
