@@ -54,9 +54,10 @@ public class InstagramAccountController {
      *
      * @param handle The Instagram account handle
      * @return The saved Instagram account
+     * @throws MissingEntityException When the account does not exist
      */
     @GetMapping("/account/{handle}")
-    public InstagramAccount getInstagramAccount(@PathVariable String handle) {
+    public InstagramAccount getInstagramAccount(@PathVariable String handle) throws MissingEntityException {
         Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
 
         if (account.isEmpty()) {
@@ -66,8 +67,17 @@ public class InstagramAccountController {
         return account.get();
     }
 
+    /**
+     * Creates a snapshot for a given Instagram handle
+     *
+     * @param handle The Instagram account handle
+     * @return The new snapshot
+     * @throws IOException When communication cannot be established with the "private" Instagram API
+     * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
+     * @throws MissingEntityException When the account does not exist
+     */
     @PostMapping("/account/{handle}/snapshot")
-    public FollowerSnapshot takeFollowerSnapshot(@PathVariable String handle) throws IOException, InterruptedException {
+    public FollowerSnapshot createSnapshot(@PathVariable String handle) throws IOException, InterruptedException, MissingEntityException {
         Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
 
         if (account.isEmpty()) {
