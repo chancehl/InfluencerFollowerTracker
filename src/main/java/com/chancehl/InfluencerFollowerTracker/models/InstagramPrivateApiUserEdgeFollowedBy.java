@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EdgeFollowedBy {
+public class InstagramPrivateApiUserEdgeFollowedBy {
     public int count;
 }

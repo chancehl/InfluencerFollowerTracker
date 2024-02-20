@@ -12,6 +12,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InstagramAccountService {
@@ -33,22 +35,46 @@ public class InstagramAccountService {
     /**
      * Gets the follower count for a given Instagram account name
      *
-     * @param name The Instagram account name
+     * @param handle The Instagram account name
      * @return Instagram "private" API response object
      * @throws IOException When communication cannot be established with the "private" Instagram API
      * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
      */
-    public InstagramPrivateApiUserResponse getFollowerCount(String name) throws IOException, InterruptedException {
+    public InstagramPrivateApiUserResponse getInstagramAccountData(String handle) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://i.instagram.com/api/v1/users/web_profile_info/?username=" + name))
+                .uri(URI.create("https://i.instagram.com/api/v1/users/web_profile_info/?username=" + handle))
                 .header("user-agent", HACKY_ASS_USER_AGENT_FROM_INTERNET)
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         return this.objectMapper.readValue(response.body(), InstagramPrivateApiUserResponse.class);
+    }
+
+    /**
+     * Returns the follower account for a given user
+     *
+     * @param handle The Instagram account handle
+     * @return An int representing the follower count
+     * @throws IOException When communication cannot be established with the "private" Instagram API
+     * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
+     */
+    public int getFollowerCount(String handle) throws IOException, InterruptedException {
+        InstagramPrivateApiUserResponse response = this.getInstagramAccountData(handle);
+
+        return response.data.user.edgeFollowedBy.count;
+    }
+
+    /**
+     * Gets an Instagram account from the database
+     *
+     * @param handle The Instagram account handle
+     * @return The Instagram account from the database
+     */
+    public Optional<InstagramAccount> getAccount(String handle) {
+        return this.instagramAccountRepository.findById(handle);
     }
 
     /**
@@ -59,5 +85,14 @@ public class InstagramAccountService {
      */
     public InstagramAccount saveAccount(InstagramAccount account) {
         return this.instagramAccountRepository.save(account);
+    }
+
+    /**
+     * Saves multiple Instagram accounts to the database
+     *
+     * @param accounts The account(s) to save
+     */
+    public void saveAccounts(List<InstagramAccount> accounts) {
+        this.instagramAccountRepository.saveAll(accounts);
     }
 }

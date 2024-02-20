@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InstagramAccount {
     @Id
-    public String name;
+    public String handle;
+
+    public String fullName;
 
     public int followers;
 }

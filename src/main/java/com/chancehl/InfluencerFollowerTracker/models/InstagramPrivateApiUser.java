@@ -10,5 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InstagramPrivateApiUser {
     @JsonProperty("edge_followed_by")
-    public EdgeFollowedBy edgeFollowedBy;
+    public InstagramPrivateApiUserEdgeFollowedBy edgeFollowedBy;
+
+    @JsonProperty("full_name")
+    public String fullName;
 }
