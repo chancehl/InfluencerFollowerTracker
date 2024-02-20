@@ -25,7 +25,7 @@ public class InstagramAccountController {
      * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
      * @throws AccessDeniedException When the client API key does not match what's stored on the server
      */
-    @PostMapping("/account/{handle}")
+    @PostMapping("/accounts/{handle}")
     public InstagramAccount saveInstagramAccount(@RequestHeader("X-Api-Key") String apiKey, @PathVariable String handle) throws IOException, InterruptedException, AccessDeniedException {
         Dotenv dotenv = Dotenv.load();
 
@@ -56,7 +56,7 @@ public class InstagramAccountController {
      * @return The saved Instagram account
      * @throws MissingEntityException When the account does not exist
      */
-    @GetMapping("/account/{handle}")
+    @GetMapping("/accounts/{handle}")
     public InstagramAccount getInstagramAccount(@PathVariable String handle) throws MissingEntityException {
         Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
 
@@ -76,7 +76,7 @@ public class InstagramAccountController {
      * @throws InterruptedException When communication is severed when communicating with the "private" Instagram API
      * @throws MissingEntityException When the account does not exist
      */
-    @PostMapping("/account/{handle}/snapshot")
+    @PostMapping("/accounts/{handle}/snapshots")
     public FollowerSnapshot createSnapshot(@PathVariable String handle) throws IOException, InterruptedException, MissingEntityException {
         Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
 
