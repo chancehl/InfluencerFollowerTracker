@@ -1,6 +1,7 @@
 package com.chancehl.InfluencerFollowerTracker.controllers;
 
 import com.chancehl.InfluencerFollowerTracker.models.*;
+import com.chancehl.InfluencerFollowerTracker.services.FollowerSnapshotService;
 import com.chancehl.InfluencerFollowerTracker.services.InstagramAccountService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import java.util.Optional;
 public class InstagramAccountController {
     @Autowired
     private InstagramAccountService instagramAccountService;
+
+    @Autowired
+    private FollowerSnapshotService followerSnapshotService;
 
     /**
      * Looks up an Instagram account by handle and saves it in the database
@@ -95,5 +99,23 @@ public class InstagramAccountController {
         this.instagramAccountService.updateAccount(account.get(), snapshot);
 
         return snapshot;
+    }
+
+    /**
+     * Gets the latest follower snapshot for an Instagram account
+     *
+     * @param handle The Instagram account handle
+     * @return The latest snapshot
+     * @throws MissingEntityException When the account does not exist
+     */
+    @GetMapping("/accounts/{handle}/snapshots/latest")
+    public FollowerSnapshot getLatestSnapshot(@PathVariable String handle) throws MissingEntityException {
+        Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
+
+        if (account.isEmpty()) {
+            throw new MissingEntityException("Invalid account: " + handle);
+        }
+
+        return this.followerSnapshotService.getLatestSnapshot(handle);
     }
 }
