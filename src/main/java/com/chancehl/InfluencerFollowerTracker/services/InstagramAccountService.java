@@ -1,5 +1,6 @@
 package com.chancehl.InfluencerFollowerTracker.services;
 
+import com.chancehl.InfluencerFollowerTracker.models.FollowerSnapshot;
 import com.chancehl.InfluencerFollowerTracker.models.InstagramAccount;
 import com.chancehl.InfluencerFollowerTracker.models.InstagramPrivateApiUserResponse;
 import com.chancehl.InfluencerFollowerTracker.repositories.InstagramAccountRepository;
@@ -94,5 +95,20 @@ public class InstagramAccountService {
      */
     public void saveAccounts(List<InstagramAccount> accounts) {
         this.instagramAccountRepository.saveAll(accounts);
+    }
+
+
+    /**
+     * Updates an account after associating a snapshot with it
+     *
+     * @param account The account to update
+     * @param snapshot The snapshot to associate with the account
+     */
+    public void updateAccount(InstagramAccount account, FollowerSnapshot snapshot) {
+        // Associate back reference
+        account.snapshots.add(snapshot);
+
+        // Update account
+        this.instagramAccountRepository.save(account);
     }
 }

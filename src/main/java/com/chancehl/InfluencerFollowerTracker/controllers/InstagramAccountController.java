@@ -1,14 +1,14 @@
 package com.chancehl.InfluencerFollowerTracker.controllers;
 
-import com.chancehl.InfluencerFollowerTracker.models.AccessDeniedException;
-import com.chancehl.InfluencerFollowerTracker.models.InstagramAccount;
-import com.chancehl.InfluencerFollowerTracker.models.InstagramPrivateApiUserResponse;
+import com.chancehl.InfluencerFollowerTracker.models.*;
 import com.chancehl.InfluencerFollowerTracker.services.InstagramAccountService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -41,6 +41,9 @@ public class InstagramAccountController {
                 .handle(handle)
                 .followers(response.data.user.edgeFollowedBy.count)
                 .fullName(response.data.user.fullName)
+                .createdOn(new Date().getTime())
+                .lastUpdated(new Date().getTime())
+                .snapshots(new ArrayList<>())
                 .build();
 
         return this.instagramAccountService.saveAccount(account);
@@ -53,7 +56,34 @@ public class InstagramAccountController {
      * @return The saved Instagram account
      */
     @GetMapping("/account/{handle}")
-    public Optional<InstagramAccount> getInstagramAccount(@PathVariable String handle) {
-        return this.instagramAccountService.getAccount(handle);
+    public InstagramAccount getInstagramAccount(@PathVariable String handle) {
+        Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
+
+        if (account.isEmpty()) {
+            throw new MissingEntityException("Invalid account: " + handle);
+        }
+
+        return account.get();
+    }
+
+    @PostMapping("/account/{handle}/snapshot")
+    public FollowerSnapshot takeFollowerSnapshot(@PathVariable String handle) throws IOException, InterruptedException {
+        Optional<InstagramAccount> account = this.instagramAccountService.getAccount(handle);
+
+        if (account.isEmpty()) {
+            throw new MissingEntityException("Invalid account: " + handle);
+        }
+
+        InstagramPrivateApiUserResponse response = this.instagramAccountService.getInstagramAccountData(handle);
+
+        FollowerSnapshot snapshot = FollowerSnapshot.builder()
+                .instagramAccount(account.get())
+                .createdOn(new Date().getTime())
+                .followers(response.data.user.edgeFollowedBy.count)
+                .build();
+
+        this.instagramAccountService.updateAccount(account.get(), snapshot);
+
+        return snapshot;
     }
 }
