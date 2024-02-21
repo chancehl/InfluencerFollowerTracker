@@ -1,6 +1,5 @@
 package com.chancehl.InfluencerFollowerTracker.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +23,14 @@ public class InstagramAccount {
     public long createdOn;
 
     public long lastUpdated;
+
+    public String gender;
+
+    @Column(length = 1024)
+    public String profilePicUrl;
+
+    @Enumerated(EnumType.STRING)
+    public Program program;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "instagramAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

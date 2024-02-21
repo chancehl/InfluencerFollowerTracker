@@ -14,4 +14,7 @@ public class InstagramPrivateApiUser {
 
     @JsonProperty("full_name")
     public String fullName;
+
+    @JsonProperty("profile_pic_url")
+    public String profilePicUrl;
 }

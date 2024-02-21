@@ -79,6 +79,15 @@ public class InstagramAccountService {
     }
 
     /**
+     * Gets a list of all saved Instagram accounts
+     *
+     * @return A list of the saved Instagram accounts
+     */
+    public List<InstagramAccount> getAllAccounts() {
+        return this.instagramAccountRepository.findAll();
+    }
+
+    /**
      * Saves an Instagram account in the database
      *
      * @param account The account to save
