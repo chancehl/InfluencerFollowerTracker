@@ -27,6 +27,8 @@ public class GetLatestFollowersTask extends TimerTask {
 
         List<InstagramAccount> allAccounts = this.instagramAccountService.getAllAccounts();
 
+        logger.info("Refreshing {} accounts", allAccounts.size());
+
         for (InstagramAccount account : allAccounts) {
             logger.info("Refreshing Instagram followers for account {}", account.handle);
 
@@ -36,7 +38,7 @@ public class GetLatestFollowersTask extends TimerTask {
 
                 // create snapshot
                 FollowerSnapshot snapshot = FollowerSnapshot.builder()
-                        .instagramAccount(account.get())
+                        .instagramAccount(account)
                         .createdOn(new Date().getTime())
                         .followers(response.data.user.edgeFollowedBy.count)
                         .build();

@@ -33,6 +33,6 @@ public class InstagramAccount {
     public Program program;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "instagramAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "instagramAccount", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<FollowerSnapshot> snapshots;
 }
